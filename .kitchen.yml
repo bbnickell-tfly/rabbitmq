@@ -7,6 +7,7 @@ provisioner:
 
 platforms:
   - name: centos-6.5
+  - name: centos-7.0
   - name: ubuntu-12.04
   - name: ubuntu-14.04
   - name: debian-7.7
@@ -15,13 +16,31 @@ suites:
   - name: default
     run_list:
       - recipe[rabbitmq::default]
-  - name: cluster
+  - name: default-use-distro-version
     run_list:
       - recipe[rabbitmq::default]
     attributes:
       rabbitmq:
-        cluster: true
-        cluster_disk_nodes: ['rabbit@localhost']
+        use_distro_version: true
+    excludes: ["centos-6.5", "centos-7.0"]
   - name: lwrps
     run_list:
       - recipe[rabbitmq_test::lwrps]
+  - name: default-force-yes
+    run_list:
+      - recipe[rabbitmq::default]
+    attributes:
+           apt:
+             confd:
+               assume_yes: true
+               force-yes: true
+    excludes: ["centos-6.5", "centos-7.0"]
+  - name: default-force-yes-false
+    run_list:
+      - recipe[rabbitmq::default]
+    attributes:
+           apt:
+             confd:
+               assume_yes: false
+               force-yes: false
+    excludes: ["centos-6.5", "centos-7.0"]

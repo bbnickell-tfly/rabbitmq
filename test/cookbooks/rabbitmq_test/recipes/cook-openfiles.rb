@@ -1,8 +1,6 @@
 #
 # Cookbook Name:: rabbitmq_test
-# Recipe:: ssl
-#
-# Copyright 2012, Chef Software, Inc. <legal@chef.io>
+# Recipe:: cook-openfiles
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,3 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+node.set['rabbitmq']['open_file_limit'] = 2048
+include_recipe 'rabbitmq::default'
+
+# HACK: Give rabbit time to spin up before the tests, it seems
+# # to be responding that it has started before it really has
+execute 'sleep 10' do
+  action :nothing
+  subscribes :run, "service[#{node['rabbitmq']['service_name']}]", :delayed
+end

@@ -1,15 +1,18 @@
 name 'rabbitmq'
 maintainer 'Chef, Inc.'
-maintainer_email 'cookbooks@chef.io'
+maintainer_email 'jj@chef.io'
 license 'Apache 2.0'
 description 'Installs and configures RabbitMQ server'
-version '3.8.0'
+version '4.6.0'
 recipe 'rabbitmq', 'Install and configure RabbitMQ'
 recipe 'rabbitmq::cluster', 'Set up RabbitMQ clustering.'
 recipe 'rabbitmq::plugin_management', 'Manage plugins with node attributes'
 recipe 'rabbitmq::virtualhost_management', 'Manage virtualhost with node attributes'
 recipe 'rabbitmq::user_management', 'Manage users with node attributes'
-depends 'erlang', '>= 0.9'
+
+depends 'erlang', '~> 1.5.0'
+depends 'yum-epel'
+depends 'yum-erlang_solutions'
 
 supports 'debian'
 supports 'ubuntu'
@@ -41,6 +44,11 @@ attribute 'rabbitmq/port',
 attribute 'rabbitmq/config',
   :display_name => 'RabbitMQ config file to load',
   :description => 'Path to the rabbitmq.config file, if any.'
+
+attribute 'rabbitmq/config_template_cookbook',
+  :display_name => 'Cookbook to load rabbitmq.config.erb from',
+  :description => 'Override this if you wish to provide rabbitmq.config.erb in your own wrapper cookbook.',
+  :default => 'rabbitmq'
 
 attribute 'rabbitmq/logdir',
   :display_name => 'RabbitMQ log directory',
@@ -107,3 +115,15 @@ attribute 'rabbitmq/local_erl_networking',
 attribute 'rabbitmq/erl_networking_bind_address',
   :display_name => 'Erl Networking Bind Address',
   :description => 'Bind Rabbit and erlang networking to an address'
+
+attribute 'rabbitmq/loopback_users',
+  :display_name => 'Loopback Users',
+  :description => 'A list of users which can only connect over a loopback interface (localhost)',
+  :default => nil,
+  :type => 'array'
+
+attribute 'rabbitmq/additional_env_settings',
+  :display_name => 'Additional ENV settings',
+  :description => 'A list of lines to append to rabbitmq-env.conf for settings that may not yet be available with existing attributes',
+  :default => nil,
+  :type => 'array'

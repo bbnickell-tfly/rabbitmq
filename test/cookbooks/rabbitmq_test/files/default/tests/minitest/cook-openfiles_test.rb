@@ -1,9 +1,3 @@
-#
-# Cookbook Name:: rabbitmq_test
-# Recipe:: ssl
-#
-# Copyright 2012, Chef Software, Inc. <legal@chef.io>
-#
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
 # You may obtain a copy of the License at
@@ -16,3 +10,15 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+require File.expand_path('../support/helpers', __FILE__)
+
+describe 'rabbitmq_test::cook-openfiles' do
+  include Helpers::RabbitMQ
+
+  it 'properly sets open_file_limit' do
+    if node['rabbitmq']['open_file_limit']
+      command("grep 'Max open files' /proc/$(sudo pgrep -u rabbitmq beam)/limits | awk '{print $5}'").stdout.chomp == "#{node['rabbitmq']['open_file_limit']}"
+    end
+  end
+end

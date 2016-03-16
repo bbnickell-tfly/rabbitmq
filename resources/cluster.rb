@@ -1,8 +1,9 @@
 #
-# Cookbook Name:: rabbitmq_test
-# Recipe:: ssl
+# Cookbook Name:: rabbitmq
+# Resource:: cluster
 #
-# Copyright 2012, Chef Software, Inc. <legal@chef.io>
+# Author: Sunggun Yu <sunggun.dev@gmail.com>
+# Copyright (C) 2015 Sunggun Yu
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,3 +17,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+actions :join, :set_cluster_name, :change_cluster_node_type
+
+default_action :join
+
+attribute :cluster_nodes, :kind_of => String, :name_attribute => true # first node name to join
+attribute :cluster_name,  :kind_of => String                          # cluster name

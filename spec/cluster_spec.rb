@@ -1,8 +1,9 @@
 #
-# Cookbook Name:: rabbitmq_test
-# Recipe:: ssl
+# Cookbook Name:: rabbitmq
+# Spec:: cluster
 #
-# Copyright 2012, Chef Software, Inc. <legal@chef.io>
+# Author: Sunggun Yu <sunggun.dev@gmail.com>
+# Copyright (C) 2015 Sunggun Yu
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,3 +17,19 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+require 'spec_helper'
+
+describe 'rabbitmq::cluster' do
+  let(:runner) { ChefSpec::ServerRunner.new(REDHAT_OPTS) }
+  let(:node) { runner.node }
+  cached(:chef_run) do
+    runner.converge(described_recipe)
+  end
+
+  let(:file_cache_path) { Chef::Config[:file_cache_path] }
+
+  it 'includes the `default` recipe' do
+    expect(chef_run).to include_recipe('rabbitmq::default')
+  end
+end
